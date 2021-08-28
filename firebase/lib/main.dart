@@ -6,31 +6,34 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Firestore db = Firestore.instance;
-  /*
+  //db.collection("noticias").document("spMKcEn3wO1D7eXtQ5ZN").delete();
+  // db.collection("usuarios")
+  //     .document("001")
+  //     .setData({
+  //   "nome":"Davi",
+  //   "idade": "26"
+  // });
+
+  // DocumentSnapshot snapshot = await db.collection("usuarios")
+  //     .document("001")
+  //     .get();
+  // print("Dados: ${snapshot.data}");
+
+  // QuerySnapshot snapshot = await db.collection("usuarios")
+  //     .getDocuments();
+  //print("Dados usuários: ${snapshot.documents.toString()}");
+
+  // for(DocumentSnapshot item in snapshot.documents){
+  //   //print("Dados usuários: ${item.data}");
+  //   print("Dados usuários: Nome => ${item.data["nome"]} Idade => ${item.data["idade"]}");
+  // }
+
   db.collection("usuarios")
-  .document("001")
-  .setData({
-    "nome": "Davi",
-    "idade": "31"
+      .snapshots().listen((event) {
+        for(DocumentSnapshot item in event.documents){
+          print("Dados: ${item.data}");
+        }
   });
-  */
-
-  // DocumentReference ref = await db.collection("noticias")
-  // .add(
-  //     {
-  //       "titulo": "Criada moeda virtual!",
-  //       "descricao": "Texto de exemplo..."
-  //     }
-  // );
-  // print("Item salvo: ${ref.documentID}");
-
-  db.collection("noticias")
-      .document("spMKcEn3wO1D7eXtQ5ZN")
-      .setData(
-      {
-        "titulo": "Criada moeda virtual!",
-        "descricao": "Texto de exemplo alterado..."
-      });
 
 runApp(MyApp());}
 
