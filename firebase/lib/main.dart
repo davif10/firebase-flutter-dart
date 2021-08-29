@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() async {
   //Inicializar Firebase
@@ -25,21 +28,22 @@ void main() async {
 
   runApp(
       MaterialApp(
-        home: MyApp(),
+        home: Home(),
       )
   );}
 
-class MyApp extends StatefulWidget {
+class Home extends StatefulWidget {
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _HomeState createState() => _HomeState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _HomeState extends State<Home> {
+  File _imagem;
   @override
   void initState() {
     super.initState();
-    cadastroLoginUsuario();
+    //cadastroLoginUsuario();
   }
 
   cadastroLoginUsuario() async{
@@ -70,13 +74,48 @@ class _MyAppState extends State<MyApp> {
     //   print("Usuario deslogado.");
     // }
   }
+  
+  _recuperarImagem(bool daCamera) async {
+    File imagemSelecionada;
+    if(daCamera){//Camera
+      imagemSelecionada = await ImagePicker.pickImage(source: ImageSource.camera);
+    }else{//Galeria
+      imagemSelecionada = await ImagePicker.pickImage(source: ImageSource.gallery);
+    }
+    setState(() {
+      _imagem = imagemSelecionada;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Firebase"),
+        title: Text("Selecionar imagem"),
       ),
-      body: Container(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              ElevatedButton(
+                  child: Text("Camera"),
+                  onPressed: (){
+                    _recuperarImagem(true);
+                  },
+              ),
+              ElevatedButton(
+                child: Text("Galeria"),
+                onPressed: (){
+                  _recuperarImagem(false);
+                },
+              ),
+              _imagem == null
+              ? Container()
+                  : Image.file(_imagem)
+            ],
+          ),
+        ),
 
       ),
     );
